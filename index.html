@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียนผู้เข้าพัก - Resort Check-in</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white w-full max-w-md rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-blue-600 p-6 text-center">
+            <h1 class="text-white text-xl font-bold">ลงทะเบียนเข้าพัก</h1>
+            <p class="text-blue-100 text-sm">กรุณากรอกข้อมูลเพื่อส่งหน่วยงานราชการ</p>
+        </div>
+
+        <form id="guestForm" class="p-6 space-y-4">
+            
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2">ชื่อจริง</label>
+                <input type="text" id="firstname" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เช่น สมชาย">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2">นามสกุล</label>
+                <input type="text" id="lastname" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="เช่น ใจดี">
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2">เบอร์มือถือ</label>
+                <input type="tel" id="phone" required pattern="[0-9]{10}" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="08xxxxxxxx">
+            </div>
+
+            <div class="pt-2">
+                <label class="block text-gray-700 text-sm font-bold mb-2">ถ่ายรูปบัตรประชาชน</label>
+                
+                <input type="file" id="idCardInput" accept="image/*" capture="environment" class="hidden" onchange="previewImage(event)">
+                
+                <button type="button" onclick="document.getElementById('idCardInput').click()" class="w-full py-3 px-4 bg-gray-200 text-gray-700 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    กดเพื่อถ่ายรูปบัตร
+                </button>
+
+                <div id="previewContainer" class="hidden mt-4 text-center">
+                    <p class="text-xs text-gray-500 mb-1">รูปตัวอย่าง:</p>
+                    <img id="imagePreview" class="w-full rounded-lg border-2 border-dashed border-gray-300 max-h-48 object-contain mx-auto">
+                </div>
+            </div>
+
+            <div class="flex items-start gap-2 pt-2">
+                <input type="checkbox" id="consent" required class="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                <label for="consent" class="text-xs text-gray-600">
+                    ข้าพเจ้ายินยอมให้ทางรีสอร์ตเก็บข้อมูลและรูปภาพบัตรประชาชน เพื่อวัตถุประสงค์ในการนำส่งหน่วยงานราชการตามกฎหมายเท่านั้น
+                </label>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition shadow-lg mt-4">
+                บันทึกข้อมูล
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // ฟังก์ชันแสดงรูปตัวอย่างหลังจากถ่ายเสร็จ
+        function previewImage(event) {
+            const input = event.target;
+            const previewContainer = document.getElementById('previewContainer');
+            const imagePreview = document.getElementById('imagePreview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // จำลองการส่งข้อมูล (Form Submission)
+        // ... (โค้ดส่วน previewImage ด้านบนเหมือนเดิม) ...
+
+        document.getElementById('guestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+            
+            // เช็คว่ามีรูปไหม
+            const fileInput = document.getElementById('idCardInput');
+            if(fileInput.files.length === 0){
+                alert('กรุณาถ่ายรูปบัตรประชาชน');
+                return;
+            }
+
+            // เปลี่ยนปุ่มเป็น "กำลังบันทึก..." และกันไม่ให้กดย้ำ
+            submitBtn.disabled = true;
+            submitBtn.innerText = "กำลังบันทึกข้อมูล...";
+
+            // เตรียมข้อมูลรูปภาพ (แปลงเป็น Base64)
+            const reader = new FileReader();
+            reader.readAsDataURL(fileInput.files[0]);
+            
+            reader.onload = function() {
+                const base64Image = reader.result;
+
+                // เตรียมข้อมูลที่จะส่ง
+                const dataToSend = {
+                    firstname: document.getElementById('firstname').value,
+                    lastname: document.getElementById('lastname').value,
+                    phone: document.getElementById('phone').value,
+                    image: base64Image
+                };
+
+                // *** ใส่ URL ที่ได้จากขั้นตอน Deploy ตรงนี้ ***
+                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwKvkhnk9fBW4xzkArShPTVQovc-yoUxbCZcZ7u8Z4wwY0V5f9w0qXp5jOD0Or7jDzYw/exec'; 
+
+                // ส่งข้อมูลด้วย fetch
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // สำคัญ: Google Script บังคับใช้ no-cors ในบางกรณี แต่เราจะยิงตรงๆ แบบนี้
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify(dataToSend)
+                })
+                .then(response => {
+                    // เนื่องจาก mode: no-cors เราจะเช็ค response.ok ไม่ได้แม่นยำ 
+                    // แต่ถ้าโค้ดไม่ error ถือว่าส่งไปแล้ว
+                    alert('✅ บันทึกข้อมูลสำเร็จเรียบร้อย!');
+                    document.getElementById('guestForm').reset(); // ล้างฟอร์ม
+                    document.getElementById('previewContainer').classList.add('hidden'); // ซ่อนรูป
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('❌ เกิดข้อผิดพลาด กรุณาลองใหม่');
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
+                });
+            };
+        });
+        });
+    </script>
+</body>
+</html>
